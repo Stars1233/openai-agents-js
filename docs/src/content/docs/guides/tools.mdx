@@ -46,12 +46,12 @@ When you use the `OpenAIResponsesModel` you can add the following built‑in too
 
 The SDK provides helper functions that return hosted tool definitions:
 
-| Helper function                 | Notes                                                                                                      |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `webSearchTool(options?)`       | JS-friendly options such as `searchContextSize`, `userLocation`, and `filters.allowedDomains`.             |
-| `fileSearchTool(ids, options?)` | Accepts one or more vector store IDs as the first argument, plus options like `maxNumResults` and filters. |
-| `codeInterpreterTool(options?)` | Defaults to an auto-managed container when no `container` is provided.                                     |
-| `imageGenerationTool(options?)` | Supports image generation configuration such as `size`, `quality`, `background`, and output format.        |
+| Helper function                 | Notes                                                                                                                                                                                               |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `webSearchTool(options?)`       | JS-friendly options such as `searchContextSize`, `userLocation`, and `filters.allowedDomains`.                                                                                                      |
+| `fileSearchTool(ids, options?)` | Accepts one or more vector store IDs as the first argument, plus options like `maxNumResults`, `includeSearchResults`, `rankingOptions`, and filters.                                               |
+| `codeInterpreterTool(options?)` | Defaults to an auto-managed container when no `container` is provided.                                                                                                                              |
+| `imageGenerationTool(options?)` | Supports image generation configuration such as `model`, `size`, `quality`, `background`, `inputFidelity`, `inputImageMask`, `moderation`, `outputCompression`, `partialImages`, and output format. |
 
 These helpers map JavaScript/TypeScript-friendly option names to the underlying OpenAI Responses API tool
 payloads. Refer to the official OpenAI documentation for the full tool schemas and advanced options like
@@ -160,7 +160,7 @@ Advanced structured-input options for `agent.asTool()`:
 
 - `inputBuilder`: maps structured tool args to the nested agent input payload.
 - `includeInputSchema`: includes the input JSON schema in the nested run for stronger schema-aware behavior.
-- `resumeState`: controls context reconciliation strategy when resuming nested serialized `RunState`.
+- `resumeState`: controls context reconciliation strategy when resuming nested serialized `RunState`: `'merge'` (default) merges live approval/context state into the serialized state, `'replace'` uses the current run context instead, and `'preferSerialized'` resumes with the serialized context unchanged.
 
 #### Streaming events from agent tools
 

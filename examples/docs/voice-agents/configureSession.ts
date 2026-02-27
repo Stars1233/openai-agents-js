@@ -8,10 +8,17 @@ const agent = new RealtimeAgent({
 const session = new RealtimeSession(agent, {
   model: 'gpt-realtime',
   config: {
-    inputAudioFormat: 'pcm16',
-    outputAudioFormat: 'pcm16',
-    inputAudioTranscription: {
-      model: 'gpt-4o-mini-transcribe',
+    outputModalities: ['text', 'audio'],
+    audio: {
+      input: {
+        format: 'pcm16',
+        transcription: {
+          model: 'gpt-4o-mini-transcribe',
+        },
+      },
+      output: {
+        format: 'pcm16',
+      },
     },
   },
 });

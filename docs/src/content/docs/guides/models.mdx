@@ -107,6 +107,8 @@ Despite the name, `withResponsesWebSocketSession(...)` is a transport lifecycle 
 
 If you use a websocket proxy or gateway, configure `websocketBaseURL` on `OpenAIProvider` or set `OPENAI_WEBSOCKET_BASE_URL`.
 
+If you instantiate `OpenAIProvider` yourself, remember that websocket-backed Responses model wrappers are cached by default for connection reuse. Call `await provider.close()` during shutdown to release those cached connections. `withResponsesWebSocketSession(...)` exists largely to manage that lifecycle for you: it creates a websocket-enabled provider and runner, passes them to your callback, and always closes the provider afterward. Use `providerOptions` for the temporary provider and `runnerConfig` for callback-scoped runner defaults.
+
 See [`examples/basic/stream-ws.ts`](https://github.com/openai/openai-agents-js/tree/main/examples/basic/stream-ws.ts) for a full streaming + HITL example using the Responses WebSocket transport.
 
 ---
@@ -179,19 +181,21 @@ If you want a ready-made adapter for non-OpenAI models, see [Using any model wit
 
 ---
 
-### Tracing exporter
+### Tracing credentials
 
-When using the OpenAI provider you can opt‑in to automatic trace export by providing your API
-key:
+Tracing is already enabled by default in supported server runtimes. Use
+`setTracingExportApiKey()` only when trace export should use a different credential than the
+default OpenAI API key:
 
 <Code
   lang="typescript"
   code={setTracingExportApiKeyExample}
-  title="Tracing exporter"
+  title="Set tracing export API key"
 />
 
-This sends traces to the [OpenAI dashboard](https://platform.openai.com/traces) where you can
-inspect the complete execution graph of your workflow.
+This sends traces to the [OpenAI dashboard](https://platform.openai.com/traces) using that
+credential. For exporter customization such as custom ingest endpoints or retry tuning, see the
+[Tracing guide](/openai-agents-js/guides/tracing#openai-tracing-exporter).
 
 ---
 

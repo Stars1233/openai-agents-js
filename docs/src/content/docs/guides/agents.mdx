@@ -129,7 +129,21 @@ Both synchronous and `async` functions are supported.
 
 ### Lifecycle hooks
 
-For advanced use‑cases you can observe the Agent lifecycle by listening on events. To learn what's available, refer to agent hook event names listed [here](https://github.com/openai/openai-agents-js/blob/main/packages/agents-core/src/lifecycle.ts).
+For advanced use‑cases you can observe the Agent lifecycle by listening on events.
+
+`Agent` instances emit lifecycle events for that specific agent instance, while `Runner` emits the
+same event names as a single stream across the whole run. This is useful for multi-agent
+workflows where you want one place to observe handoffs and tool calls.
+
+The shared event names are:
+
+| Event              | Agent hook arguments                    | Runner hook arguments                          |
+| ------------------ | --------------------------------------- | ---------------------------------------------- |
+| `agent_start`      | `(context, agent, turnInput?)`          | `(context, agent, turnInput?)`                 |
+| `agent_end`        | `(context, output)`                     | `(context, agent, output)`                     |
+| `agent_handoff`    | `(context, nextAgent)`                  | `(context, fromAgent, toAgent)`                |
+| `agent_tool_start` | `(context, tool, { toolCall })`         | `(context, agent, tool, { toolCall })`         |
+| `agent_tool_end`   | `(context, tool, result, { toolCall })` | `(context, agent, tool, result, { toolCall })` |
 
 <Code
   lang="typescript"

@@ -39,6 +39,9 @@ To use your own media stream or audio element, provide an
 
 <Code lang="typescript" code={customWebRTCTransportExample} />
 
+For lower-level customization, `OpenAIRealtimeWebRTC` also accepts `changePeerConnection`, which
+lets you inspect or replace the freshly created `RTCPeerConnection` before the offer is generated.
+
 ### Connecting over WebSocket
 
 Pass `transport: 'websocket'` or an instance of `OpenAIRealtimeWebSocket` when creating the session to use a WebSocket connection instead of WebRTC. This works well for server-side use cases, for example
@@ -47,6 +50,11 @@ building a phone agent with Twilio.
 <Code lang="typescript" code={websocketSessionExample} />
 
 Use any recording/playback library to handle the raw PCM16 audio bytes.
+
+For advanced integrations, `OpenAIRealtimeWebSocket` accepts `createWebSocket()` so you can supply
+your own socket implementation, and `skipOpenEventListeners` when that custom connector is
+responsible for transitioning the socket into the connected state. The Cloudflare transport in
+`@openai/agents-extensions` is built on these hooks.
 
 ### Connecting over SIP
 

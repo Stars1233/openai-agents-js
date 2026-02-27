@@ -8,10 +8,16 @@ await client.connect({
   model: 'gpt-4o-mini-realtime-preview',
   initialSessionConfig: {
     instructions: 'Speak like a pirate',
-    voice: 'ash',
-    modalities: ['text', 'audio'],
-    inputAudioFormat: 'pcm16',
-    outputAudioFormat: 'pcm16',
+    outputModalities: ['text', 'audio'],
+    audio: {
+      input: {
+        format: 'pcm16',
+      },
+      output: {
+        format: 'pcm16',
+        voice: 'ash',
+      },
+    },
   },
 });
 

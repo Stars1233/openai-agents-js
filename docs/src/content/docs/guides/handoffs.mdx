@@ -34,6 +34,7 @@ The `handoff()` function lets you tweak the generated tool.
 - `onHandoff` – callback when the handoff occurs. Receives a `RunContext` and optionally parsed input.
 - `inputType` – expected input schema for the handoff.
 - `inputFilter` – filter the history passed to the next agent.
+- `isEnabled` – boolean or predicate that exposes the handoff only for matching runs.
 
 <Code
   lang="typescript"

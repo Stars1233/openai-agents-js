@@ -38,6 +38,12 @@ handle session audio yourself:
 
 <Code lang="typescript" code={handleAudioExample} />
 
+When the underlying transport supports it, `session.muted` reports the current mute state and
+`session.mute(true | false)` toggles microphone capture. `OpenAIRealtimeWebSocket` does not
+implement muting: `session.muted` returns `null` and `session.mute()` throws, so for websocket
+setups you should pause capture on your side and stop calling `sendAudio()` until the microphone
+should be live again.
+
 ### Session configuration
 
 You can configure your session by passing additional options to either the [`RealtimeSession`](/openai-agents-js/openai/agents-realtime/classes/realtimesession/) during construction or
@@ -46,6 +52,11 @@ when you call `connect(...)`.
 <Code lang="typescript" code={configureSessionExample} />
 
 These transport layers allow you to pass any parameter that matches [session](https://platform.openai.com/docs/api-reference/realtime-client-events/session/update).
+
+Prefer the newer config shape with `outputModalities`, `audio.input`, and `audio.output`. Legacy
+top-level fields such as `modalities`, `inputAudioFormat`, `outputAudioFormat`,
+`inputAudioTranscription`, and `turnDetection` are still normalized for backwards compatibility,
+but new code should use the nested `audio` structure shown here.
 
 For parameters that are new and don't have a matching parameter in the [RealtimeSessionConfig](/openai-agents-js/openai/agents-realtime/type-aliases/realtimesessionconfig/) you can use `providerData`. Anything passed in `providerData` will be passed directly as part of the `session` object.
 
@@ -94,6 +105,10 @@ Just like regular agents, Realtime Agents can call tools to perform actions. Rea
 Function tools run in the same environment as your `RealtimeSession`. This means if you are running your session in the browser, the tool executes in the browser. If you need to perform sensitive actions, make an HTTP request to your backend within the tool.
 
 Hosted MCP tools can be configured with `hostedMcpTool` and are executed remotely. When MCP tool availability changes the session emits `mcp_tools_changed`. To prevent the session from auto-triggering a model response after MCP tool calls complete, set `automaticallyTriggerResponseForMcpToolCalls: false`.
+
+The current filtered MCP tool list is also available as `session.availableMcpTools`. Both that
+property and the `mcp_tools_changed` event reflect only the hosted MCP servers enabled on the
+active agent, after applying any `allowed_tools` filters from the agent configuration.
 
 While the tool is executing the agent will not be able to process new requests from the user. One way to improve the experience is by telling your agent to announce when it is about to execute a tool or say specific phrases to buy the agent some time to execute the tool.
 
@@ -151,7 +166,8 @@ If you want to modify this behavior you can pass a `outputGuardrailSettings` obj
 
 The Realtime Session will automatically detect when the user is speaking and trigger new turns using the built-in [voice activity detection modes of the Realtime API](https://platform.openai.com/docs/guides/realtime-vad).
 
-You can change the voice activity detection mode by passing a `turnDetection` object to the session.
+You can change the voice activity detection mode by passing `audio.input.turnDetection` in the
+session config.
 
 <Code lang="typescript" code={turnDetectionExample} />
 

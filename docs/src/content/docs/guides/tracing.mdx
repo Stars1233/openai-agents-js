@@ -96,8 +96,26 @@ Spans are automatically part of the current trace, and are nested under the near
 
 Certain spans may capture potentially sensitive data.
 
-The `createGenerationSpan()` stores the inputs/outputs of the LLM generation, and `createFunctionSpan()` stores the inputs/outputs of function calls. These may contain sensitive data, so you can disable capturing that data via [`RunConfig.traceIncludeSensitiveData
-`](/openai-agents-js/openai/agents-core/type-aliases/runconfig/#traceincludesensitivedata).
+The `createGenerationSpan()` stores the inputs/outputs of the LLM generation, and
+`createFunctionSpan()` stores the inputs/outputs of function calls. These may contain sensitive
+data, so you can disable capturing that data via
+[`RunConfig.traceIncludeSensitiveData`](/openai-agents-js/openai/agents-core/type-aliases/runconfig/#traceincludesensitivedata).
+
+## OpenAI tracing exporter
+
+In supported server runtimes, the default tracing setup already exports to OpenAI. Use
+`setTracingExportApiKey()` when trace export should use a different credential than
+`OPENAI_API_KEY`.
+
+If you need custom ingest behavior, instantiate
+[`OpenAITracingExporter`](/openai-agents-js/openai/agents-openai/classes/openaitracingexporter)
+yourself and install it with `setTraceProcessors(...)` or `addTraceProcessor(...)`. The exporter
+supports `apiKey`, `endpoint`, `organization`, `project`, `maxRetries`, `baseDelay`, and
+`maxDelay`.
+
+If you replace the default processors and later want to restore the default OpenAI exporter with a
+batch processor, call
+[`setDefaultOpenAITracingExporter()`](/openai-agents-js/openai/agents-openai/functions/setdefaultopenaitracingexporter/).
 
 ## Custom tracing processors
 

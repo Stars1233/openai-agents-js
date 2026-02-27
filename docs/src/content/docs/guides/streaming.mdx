@@ -74,6 +74,11 @@ You do not need `withResponsesWebSocketSession(...)` or a custom `OpenAIProvider
 
 Use `withResponsesWebSocketSession(...)` or a custom `OpenAIProvider` / `Runner` when you want connection reuse and more explicit provider lifecycle control.
 
+If you build the provider yourself, remember to call `await provider.close()` when shutting down.
+Websocket-backed model wrappers are cached for reuse by default, and closing the provider releases
+those connections. `withResponsesWebSocketSession(...)` gives you the same reuse but scopes cleanup
+to a single callback automatically.
+
 See [`examples/basic/stream-ws.ts`](https://github.com/openai/openai-agents-js/tree/main/examples/basic/stream-ws.ts) for a complete example with streaming, tool calls, approvals, and `previousResponseId`.
 
 ## Event types
@@ -110,6 +115,18 @@ type RunItemStreamEvent = {
   item: RunItem;
 };
 ```
+
+`name` identifies which kind of item was produced:
+
+| `name`                    | Meaning                                           |
+| ------------------------- | ------------------------------------------------- |
+| `message_output_created`  | A message output item was created.                |
+| `handoff_requested`       | The model requested a handoff.                    |
+| `handoff_occurred`        | The runtime completed a handoff to another agent. |
+| `tool_called`             | A tool call item was emitted.                     |
+| `tool_output`             | A tool result item was emitted.                   |
+| `reasoning_item_created`  | A reasoning item was emitted.                     |
+| `tool_approval_requested` | A tool call paused for human approval.            |
 
 Example handoff payload:
 
