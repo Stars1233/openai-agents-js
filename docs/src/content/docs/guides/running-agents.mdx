@@ -176,7 +176,6 @@ This affects places where the SDK replays generated model items as input, such a
 - subsequent turns that reuse generated items as input/history,
 - resumed runs from a saved `RunState`,
 - derived result views like `result.history` / `result.output` (which are model-input-shaped arrays).
-
 - `'preserve'` (default) keeps reasoning-item IDs.
 - `'omit'` strips the `id` field from reasoning items before they are sent back as input.
 - Non-reasoning items are unaffected.
