@@ -140,7 +140,7 @@ const languages: Record<string, string> = {
   zh: 'Chinese',
   // Add more languages here
 };
-const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-5';
+const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-5.3-codex';
 setDefaultOpenAIKey(process.env.OPENAI_API_KEY || '');
 const ENABLE_CODE_SNIPPET_EXCLUSION = true;
 
